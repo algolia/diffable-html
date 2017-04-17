@@ -1,0 +1,46 @@
+{
+  "name": "diffable-html",
+  "version": "0.0.1",
+  "description": "Opinionated HTML formatter focused towards making HTML diffs readable.",
+  "main": "index.js",
+  "author": "Raymond RUTJES <raymond.rutjes@gmail.com> (https://github.com/rayrutjes/)",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest --verbose"
+  },
+  "files": [
+    "index.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rayrutjes/diffable-html.git"
+  },
+  "keywords": [
+    "html",
+    "formatter",
+    "diff",
+    "diffable",
+    "jest",
+    "snapshot",
+    "serializer",
+    "snapshotSerializer",
+    "string",
+    "vue",
+    "vue.js",
+    "test",
+    "beautifier",
+    "js-beautify"
+  ],
+  "bugs": {
+    "url": "https://github.com/rayrutjes/diffable-html/issues"
+  },
+  "homepage": "https://github.com/rayrutjes/diffable-html#readme",
+  "dependencies": {
+    "htmlparser2": "^3.9.2"
+  },
+  "devDependencies": {
+    "babel-jest": "^19.0.0",
+    "babel-preset-es2015": "^6.24.1",
+    "jest": "^19.0.2"
+  }
+}
