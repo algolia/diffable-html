@@ -1,6 +1,6 @@
 {
   "name": "diffable-html",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Opinionated HTML formatter focused towards making HTML diffs readable.",
   "main": "dist/diffable-html.js",
   "author": "Raymond RUTJES <raymond.rutjes@gmail.com> (https://github.com/rayrutjes/)",
