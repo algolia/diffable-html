@@ -11,6 +11,7 @@
     "test": "jest --verbose"
   },
   "files": [
+    "dist",
     "index.js"
   ],
   "repository": {
