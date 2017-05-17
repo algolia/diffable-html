@@ -78,3 +78,35 @@ test('should not introduce line break if text node is empty', () => {
 `
   );
 });
+
+test('should print out xml declarations', () => {
+  const html = `<?xml version="1.0" encoding="utf-8"?>`;
+
+  expect(format(html)).toEqual(
+    `
+<?xml version="1.0" encoding="utf-8"?>
+`
+  );
+});
+
+test('should print out doctype', () => {
+  const html = `<!DOCTYPE html>`;
+
+  expect(format(html)).toEqual(
+    `
+<!DOCTYPE html>
+`
+  );
+});
+
+test('should not indent after a directive', () => {
+  const html = `<!DOCTYPE html><html></html>`;
+
+  expect(format(html)).toEqual(
+    `
+<!DOCTYPE html>
+<html>
+</html>
+`
+  );
+});

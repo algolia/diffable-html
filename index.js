@@ -83,6 +83,11 @@ const format = function(html) {
       elements.push(' '.repeat(indentSize * currentIndentation));
       elements.push(`</${tagname}>`);
     },
+    onprocessinginstruction: function(name, data) {
+      elements.push('\n');
+      elements.push(' '.repeat(indentSize * currentIndentation));
+      elements.push(`<${data}>`);
+    },
   });
   parser.write(html);
   parser.end();
