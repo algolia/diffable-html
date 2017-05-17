@@ -24,70 +24,226 @@ const format = function(html) {
   const elements = [];
   const indentSize = 2;
 
-  let currentIndentation = 0;
+  let currentDepth = 0;
 
-  const parser = new Parser({
-    onopentag: function(name, attrs) {
-      elements.push('\n');
-      elements.push(' '.repeat(indentSize * currentIndentation++));
-      elements.push('<' + name);
+  const increaseCurrentDepth = () => {
+    currentDepth++;
+  };
 
-      const attrsNames = Object.keys(attrs);
+  const decreaseCurrentDepth = () => {
+    currentDepth--;
+  };
 
-      if (attrsNames.length === 1) {
-        elements.push(` ${attrsNames[0]}="${attrs[attrsNames[0]]}"`);
+  const getIndentation = size => {
+    return ' '.repeat(size);
+  };
+
+  const getIndentationForDepth = depth => {
+    return getIndentation(indentSize * depth);
+  };
+
+  const getCurrentIndentation = () => {
+    return getIndentationForDepth(currentDepth);
+  };
+
+  const getAttributeIndentation = tagName => {
+    return getIndentation(indentSize * currentDepth + tagName.length - 1);
+  };
+
+  const getAttributeIndentationForCurrentTag = () => {
+    return getAttributeIndentation(currentTag);
+  };
+
+  const append = content => {
+    elements.push(content);
+  };
+
+  const appendLineBreak = () => {
+    append('\n');
+  };
+
+  const appendIndentation = depth => {
+    append(getIndentationForDepth(depth));
+  };
+
+  const appendCurrentIndentation = () => {
+    append(getCurrentIndentation());
+  };
+
+  const appendOpeningTag = name => {
+    append('<' + name);
+  };
+
+  const appendClosingTagOnSameLine = (closeWith = '>') => {
+    append(closeWith);
+  };
+
+  const appendClosingTagOnNewLine = (closeWith = '>') => {
+    appendLineBreak();
+    appendIndentation(currentDepth - 1);
+    append(closeWith);
+  };
+
+  const getAttributeAsString = (name, value) => {
+    if (value.length === 0) {
+      return name;
+    }
+
+    return `${name}="${value}"`;
+  };
+
+  const appendAttribute = (name, value) => {
+    let attribute = ' ' + name;
+
+    if (value.length > 0) {
+      attribute += `="${value}"`;
+    }
+
+    append(attribute);
+  };
+
+  const appendAttributeOnNewLine = (name, value, tagName) => {
+    appendLineBreak();
+    append(getAttributeIndentation(tagName));
+    appendAttribute(name, value);
+  };
+
+  const appendAttributes = (attributes, tagName) => {
+    const names = Object.keys(attributes);
+
+    if (names.length === 1) {
+      appendAttribute(names[0], attributes[names[0]]);
+    }
+
+    if (names.length <= 1) {
+      return;
+    }
+
+    let firstAttribute = true;
+    for (let name in attributes) {
+      if (firstAttribute === true) {
+        firstAttribute = false;
+        appendAttribute(name, attributes[name]);
+      } else {
+        appendAttributeOnNewLine(name, attributes[name], tagName);
       }
+    }
+  };
 
-      if (attrsNames.length <= 1) {
-        elements.push('>');
+  const appendClosingTag = (attributes, closeWith) => {
+    if (Object.keys(attributes).length <= 1) {
+      appendClosingTagOnSameLine(closeWith);
+
+      return;
+    }
+    appendClosingTagOnNewLine(closeWith);
+  };
+
+  const render = () => {
+    return elements.join('');
+  };
+
+  const isXmlDirective = name => {
+    return name === '?xml';
+  };
+
+  const isVoidTagName = name => {
+    return voidElements.indexOf(name) !== -1;
+  };
+
+  const extractAttributesFromString = content => {
+    const attributes = {};
+
+    const pieces = content.split(/\s/);
+    // Remove tag name.
+    delete pieces[0];
+
+    pieces.forEach(element => {
+      if (element.length === 0) {
         return;
       }
+      if (element.indexOf('=') === -1) {
+        attributes[element] = '';
+      }
+    });
 
-      let firstAttribute = true;
+    const attributesRegex = /(\S+)=["']?((?:.(?!["']?\s+(?:\S+)=|[>"']))+.)["']?/gim;
 
-      for (let attr in attrs) {
-        if (firstAttribute === true) {
-          firstAttribute = false;
-          elements.push(` ${attr}="${attrs[attr]}"`);
-        } else {
-          elements.push('\n');
-          elements.push(
-            ' '.repeat(indentSize * (currentIndentation - 1) + name.length + 2)
-          );
-          elements.push(`${attr}="${attrs[attr]}"`);
+    let result;
+    while ((result = attributesRegex.exec(content))) {
+      attributes[result[1]] = result[2];
+    }
+
+    return attributes;
+  };
+
+  const parser = new Parser(
+    {
+      onprocessinginstruction: function(name, data) {
+        let closingTag = '>';
+        if (isXmlDirective(name)) {
+          closingTag = '?>';
         }
-      }
-      elements.push('\n');
-      elements.push(' '.repeat(indentSize * (currentIndentation - 1)));
-      elements.push('>');
-    },
-    ontext: function(text) {
-      const trimmed = text.trim();
-      if (trimmed.length === 0) {
-        return;
-      }
 
-      elements.push('\n');
-      elements.push(' '.repeat(indentSize * currentIndentation));
-      elements.push(trimmed);
+        appendLineBreak();
+        appendCurrentIndentation();
+        increaseCurrentDepth();
+        appendOpeningTag(name);
+
+        const attributes = extractAttributesFromString(data);
+        appendAttributes(attributes, name);
+        appendClosingTag(attributes, closingTag);
+        decreaseCurrentDepth();
+      },
+      onopentag: function(name, attributes) {
+        appendLineBreak();
+        appendCurrentIndentation();
+        increaseCurrentDepth();
+        appendOpeningTag(name);
+
+        appendAttributes(attributes, name);
+        appendClosingTag(attributes, '>');
+      },
+      ontext: function(text) {
+        const trimmed = text.trim();
+        if (trimmed.length === 0) {
+          return;
+        }
+
+        appendLineBreak();
+        appendCurrentIndentation();
+        append(trimmed);
+      },
+      onclosetag: function(tagname) {
+        const isVoidTag = isVoidTagName(tagname);
+        if (isVoidTagName(tagname) === false) {
+          appendLineBreak();
+        }
+        decreaseCurrentDepth();
+        if (isVoidTag === true) {
+          return;
+        }
+        appendCurrentIndentation();
+        append(`</${tagname}>`);
+      },
+      oncomment: function(data) {
+        appendLineBreak();
+        appendCurrentIndentation();
+        append('<!--');
+        append(data);
+        append('-->');
+      },
     },
-    onclosetag: function(tagname) {
-      const isVoidElement = voidElements.indexOf(tagname) !== -1;
-      if (isVoidElement === false) {
-        elements.push('\n');
-      }
-      currentIndentation--;
-      if (isVoidElement === true) {
-        return;
-      }
-      elements.push(' '.repeat(indentSize * currentIndentation));
-      elements.push(`</${tagname}>`);
-    },
-  });
+    {
+      lowerCaseTags: false,
+    }
+  );
   parser.write(html);
   parser.end();
-  elements.push('\n');
-  return elements.join('');
+
+  appendLineBreak();
+
+  return render();
 };
 
 module.exports = format;

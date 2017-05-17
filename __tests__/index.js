@@ -78,3 +78,120 @@ test('should not introduce line break if text node is empty', () => {
 `
   );
 });
+
+test('should not lower case tags', () => {
+  const html = `<Span></Span>`;
+
+  expect(format(html)).toEqual(
+    `
+<Span>
+</Span>
+`
+  );
+});
+
+test('should support xml', () => {
+  const xml = `<?xml version="1.0" encoding="utf-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://www.example.com</loc></url><url><loc>https://www.example.com/test</loc></url></urlset>`;
+
+  expect(format(xml)).toEqual(`
+<?xml version="1.0"
+      encoding="utf-8"
+?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>
+      https://www.example.com
+    </loc>
+  </url>
+  <url>
+    <loc>
+      https://www.example.com/test
+    </loc>
+  </url>
+</urlset>
+`);
+});
+
+test('should support doctype directives', () => {
+  const html = `<!doctype html ><html></html>`;
+  expect(format(html)).toEqual(`
+<!doctype html>
+<html>
+</html>
+`);
+
+})
+
+test('should support html directives', () => {
+  const html = `<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>test</title>
+  </head>
+  <body>
+    <!--[if lte IE 9]>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+    <![endif]-->
+
+    <!-- Add your site or application content here -->
+    <p>Hello world! This is HTML5 Boilerplate.</p>
+    <script src="https://code.jquery.com/jquery-{{JQUERY_VERSION}}.min.js" integrity="{{JQUERY_SRI_HASH}}" crossorigin="anonymous"></script>
+    <script src="js/plugins.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
+    <script>
+      window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
+      ga('create','UA-XXXXX-Y','auto');ga('send','pageview')
+    </script>
+    <script src="https://www.google-analytics.com/analytics.js" async defer></script>
+  </body>
+</html>`;
+
+  expect(format(html)).toEqual(`
+<!doctype html>
+<html class="no-js"
+      lang
+>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible"
+          content="ie=edge"
+    >
+    <title>
+      test
+    </title>
+  </head>
+  <body>
+    <!--[if lte IE 9]>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+    <![endif]-->
+    <!-- Add your site or application content here -->
+    <p>
+      Hello world! This is HTML5 Boilerplate.
+    </p>
+    <script src="https://code.jquery.com/jquery-{{JQUERY_VERSION}}.min.js"
+            integrity="{{JQUERY_SRI_HASH}}"
+            crossorigin="anonymous"
+    >
+    </script>
+    <script src="js/plugins.js">
+    </script>
+    <script src="js/main.js">
+    </script>
+    <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
+    <script>
+      window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
+      ga('create','UA-XXXXX-Y','auto');ga('send','pageview')
+    </script>
+    <script src="https://www.google-analytics.com/analytics.js"
+            async
+            defer
+    >
+    </script>
+  </body>
+</html>
+`);
+});
