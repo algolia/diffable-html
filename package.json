@@ -8,7 +8,8 @@
   "scripts": {
     "build": "rollup --config",
     "build:watch": "rollup --config --watch",
-    "test": "jest --verbose"
+    "test": "jest --verbose",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "files": [
     "dist",
