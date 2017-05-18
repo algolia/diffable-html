@@ -25,70 +25,230 @@ var format = function(html) {
   var elements = [];
   var indentSize = 2;
 
-  var currentIndentation = 0;
+  var currentDepth = 0;
 
-  var parser = new htmlparser2.Parser({
-    onopentag: function(name, attrs) {
-      elements.push('\n');
-      elements.push(' '.repeat(indentSize * currentIndentation++));
-      elements.push('<' + name);
+  var increaseCurrentDepth = function () {
+    currentDepth++;
+  };
 
-      var attrsNames = Object.keys(attrs);
+  var decreaseCurrentDepth = function () {
+    currentDepth--;
+  };
 
-      if (attrsNames.length === 1) {
-        elements.push((" " + (attrsNames[0]) + "=\"" + (attrs[attrsNames[0]]) + "\""));
+  var getIndentation = function (size) {
+    return ' '.repeat(size);
+  };
+
+  var getIndentationForDepth = function (depth) {
+    return getIndentation(indentSize * depth);
+  };
+
+  var getCurrentIndentation = function () {
+    return getIndentationForDepth(currentDepth);
+  };
+
+  var getAttributeIndentation = function (tagName) {
+    return getIndentation(indentSize * currentDepth + tagName.length - 1);
+  };
+
+  var getAttributeIndentationForCurrentTag = function () {
+    return getAttributeIndentation(currentTag);
+  };
+
+  var append = function (content) {
+    elements.push(content);
+  };
+
+  var appendLineBreak = function () {
+    append('\n');
+  };
+
+  var appendIndentation = function (depth) {
+    append(getIndentationForDepth(depth));
+  };
+
+  var appendCurrentIndentation = function () {
+    append(getCurrentIndentation());
+  };
+
+  var appendOpeningTag = function (name) {
+    append('<' + name);
+  };
+
+  var appendClosingTagOnSameLine = function (closeWith) {
+    if ( closeWith === void 0 ) closeWith = '>';
+
+    append(closeWith);
+  };
+
+  var appendClosingTagOnNewLine = function (closeWith) {
+    if ( closeWith === void 0 ) closeWith = '>';
+
+    appendLineBreak();
+    appendIndentation(currentDepth - 1);
+    append(closeWith);
+  };
+
+  var getAttributeAsString = function (name, value) {
+    if (value.length === 0) {
+      return name;
+    }
+
+    return (name + "=\"" + value + "\"");
+  };
+
+  var appendAttribute = function (name, value) {
+    var attribute = ' ' + name;
+
+    if (value.length > 0) {
+      attribute += "=\"" + value + "\"";
+    }
+
+    append(attribute);
+  };
+
+  var appendAttributeOnNewLine = function (name, value, tagName) {
+    appendLineBreak();
+    append(getAttributeIndentation(tagName));
+    appendAttribute(name, value);
+  };
+
+  var appendAttributes = function (attributes, tagName) {
+    var names = Object.keys(attributes);
+
+    if (names.length === 1) {
+      appendAttribute(names[0], attributes[names[0]]);
+    }
+
+    if (names.length <= 1) {
+      return;
+    }
+
+    var firstAttribute = true;
+    for (var name in attributes) {
+      if (firstAttribute === true) {
+        firstAttribute = false;
+        appendAttribute(name, attributes[name]);
+      } else {
+        appendAttributeOnNewLine(name, attributes[name], tagName);
       }
+    }
+  };
 
-      if (attrsNames.length <= 1) {
-        elements.push('>');
+  var appendClosingTag = function (attributes, closeWith) {
+    if (Object.keys(attributes).length <= 1) {
+      appendClosingTagOnSameLine(closeWith);
+
+      return;
+    }
+    appendClosingTagOnNewLine(closeWith);
+  };
+
+  var render = function () {
+    return elements.join('');
+  };
+
+  var isXmlDirective = function (name) {
+    return name === '?xml';
+  };
+
+  var isVoidTagName = function (name) {
+    return voidElements.indexOf(name) !== -1;
+  };
+
+  var extractAttributesFromString = function (content) {
+    var attributes = {};
+
+    var pieces = content.split(/\s/);
+    // Remove tag name.
+    delete pieces[0];
+
+    pieces.forEach(function (element) {
+      if (element.length === 0) {
         return;
       }
+      if (element.indexOf('=') === -1) {
+        attributes[element] = '';
+      }
+    });
 
-      var firstAttribute = true;
+    var attributesRegex = /(\S+)=["']?((?:.(?!["']?\s+(?:\S+)=|[>"']))+.)["']?/gim;
 
-      for (var attr in attrs) {
-        if (firstAttribute === true) {
-          firstAttribute = false;
-          elements.push((" " + attr + "=\"" + (attrs[attr]) + "\""));
-        } else {
-          elements.push('\n');
-          elements.push(
-            ' '.repeat(indentSize * (currentIndentation - 1) + name.length + 2)
-          );
-          elements.push((attr + "=\"" + (attrs[attr]) + "\""));
+    var result;
+    while ((result = attributesRegex.exec(content))) {
+      attributes[result[1]] = result[2];
+    }
+
+    return attributes;
+  };
+
+  var parser = new htmlparser2.Parser(
+    {
+      onprocessinginstruction: function(name, data) {
+        var closingTag = '>';
+        if (isXmlDirective(name)) {
+          closingTag = '?>';
         }
-      }
-      elements.push('\n');
-      elements.push(' '.repeat(indentSize * (currentIndentation - 1)));
-      elements.push('>');
-    },
-    ontext: function(text) {
-      var trimmed = text.trim();
-      if (trimmed.length === 0) {
-        return;
-      }
 
-      elements.push('\n');
-      elements.push(' '.repeat(indentSize * currentIndentation));
-      elements.push(trimmed);
+        appendLineBreak();
+        appendCurrentIndentation();
+        increaseCurrentDepth();
+        appendOpeningTag(name);
+
+        var attributes = extractAttributesFromString(data);
+        appendAttributes(attributes, name);
+        appendClosingTag(attributes, closingTag);
+        decreaseCurrentDepth();
+      },
+      onopentag: function(name, attributes) {
+        appendLineBreak();
+        appendCurrentIndentation();
+        increaseCurrentDepth();
+        appendOpeningTag(name);
+
+        appendAttributes(attributes, name);
+        appendClosingTag(attributes, '>');
+      },
+      ontext: function(text) {
+        var trimmed = text.trim();
+        if (trimmed.length === 0) {
+          return;
+        }
+
+        appendLineBreak();
+        appendCurrentIndentation();
+        append(trimmed);
+      },
+      onclosetag: function(tagname) {
+        var isVoidTag = isVoidTagName(tagname);
+        if (isVoidTagName(tagname) === false) {
+          appendLineBreak();
+        }
+        decreaseCurrentDepth();
+        if (isVoidTag === true) {
+          return;
+        }
+        appendCurrentIndentation();
+        append(("</" + tagname + ">"));
+      },
+      oncomment: function(data) {
+        appendLineBreak();
+        appendCurrentIndentation();
+        append('<!--');
+        append(data);
+        append('-->');
+      },
     },
-    onclosetag: function(tagname) {
-      var isVoidElement = voidElements.indexOf(tagname) !== -1;
-      if (isVoidElement === false) {
-        elements.push('\n');
-      }
-      currentIndentation--;
-      if (isVoidElement === true) {
-        return;
-      }
-      elements.push(' '.repeat(indentSize * currentIndentation));
-      elements.push(("</" + tagname + ">"));
-    },
-  });
+    {
+      lowerCaseTags: false,
+    }
+  );
   parser.write(html);
   parser.end();
-  elements.push('\n');
-  return elements.join('');
+
+  appendLineBreak();
+
+  return render();
 };
 
 module.exports = format;
