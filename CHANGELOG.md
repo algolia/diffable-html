@@ -1,3 +1,13 @@
+<a name="2.0.1"></a>
+## [2.0.1](https://github.com/rayrutjes/diffable-html/compare/v2.0.0...v2.0.1) (2017-05-18)
+
+
+### Bug Fixes
+
+* **build:** add the missing build ([eee0b47](https://github.com/rayrutjes/diffable-html/commit/eee0b47))
+
+
+
 <a name="2.0.0"></a>
 # [2.0.0](https://github.com/rayrutjes/diffable-html/compare/v1.0.0...v2.0.0) (2017-05-18)
 
