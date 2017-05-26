@@ -1,6 +1,6 @@
 # Opinionated HTML formatter focused towards making HTML diffs readable.
 
-[![NPM version](https://badge.fury.io/js/diffable-html.svg)](https://npmjs.org/package/diffable-html)
+[![NPM version](https://badge.fury.io/js/diffable-html.svg)](https://yarnpkg.org/en/package/diffable-html)
 [![Build Status](https://travis-ci.org/rayrutjes/diffable-html.svg?branch=master)](https://travis-ci.org/rayrutjes/diffable-html)
 
 This formatter will normalize your HTML in a way that when you diff it, you get a clear sense of what changed.
