@@ -112,6 +112,19 @@ test('should support xml', () => {
 `);
 });
 
+test('should keep self-closing tags as they are', () => {
+  const xml = `<xhtml:link href="https://en.example.com" /><xhtml:link href="https://en.example.com" />`;
+
+  // in the future this should be a self closing tag instead
+  // see htmlparser2#69
+  expect(format(xml)).toEqual(`
+<xhtml:link href="https://en.example.com">
+</xhtml:link>
+<xhtml:link href="https://en.example.com">
+</xhtml:link>
+`);
+});
+
 test('should support doctype directives', () => {
   const html = `<!doctype html ><html></html>`;
   expect(format(html)).toEqual(`
@@ -119,8 +132,7 @@ test('should support doctype directives', () => {
 <html>
 </html>
 `);
-
-})
+});
 
 test('should support html directives', () => {
   const html = `<!doctype html>
