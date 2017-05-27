@@ -241,6 +241,7 @@ var format = function(html) {
     },
     {
       lowerCaseTags: false,
+      recognizeSelfClosing: true,
     }
   );
   parser.write(html);
