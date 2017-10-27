@@ -13,8 +13,7 @@
     "changelog:unreleased": "conventional-changelog --preset angular --output-unreleased"
   },
   "files": [
-    "dist",
-    "index.js"
+    "dist"
   ],
   "repository": {
     "type": "git",
