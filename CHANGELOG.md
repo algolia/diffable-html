@@ -1,3 +1,13 @@
+<a name="3.0.0"></a>
+# [3.0.0](https://github.com/rayrutjes/diffable-html/compare/v2.1.0...v3.0.0) (2018-01-03)
+
+
+### Features
+
+* remove HTML comments ([ed9b793](https://github.com/rayrutjes/diffable-html/commit/ed9b793))
+
+
+
 <a name="2.1.0"></a>
 # [2.1.0](https://github.com/rayrutjes/diffable-html/compare/v2.0.1...v2.1.0) (2017-05-27)
 
