@@ -180,7 +180,6 @@ test('should support html directives', () => {
     <!--[if lte IE 9]>
       <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
     <![endif]-->
-    <!-- Add your site or application content here -->
     <p>
       Hello world! This is HTML5 Boilerplate.
     </p>
@@ -193,7 +192,6 @@ test('should support html directives', () => {
     </script>
     <script src="js/main.js">
     </script>
-    <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
     <script>
       window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
       ga('create','UA-XXXXX-Y','auto');ga('send','pageview')
@@ -206,4 +204,50 @@ test('should support html directives', () => {
   </body>
 </html>
 `);
+});
+
+test('should strip out comments', () => {
+  const html = `<p>Start</p><!-- This comment should be removed --><p>End</p>`;
+
+  expect(format(html)).toEqual(
+    `
+<p>
+  Start
+</p>
+<p>
+  End
+</p>
+`
+  );
+});
+
+test('should strip out empty comments', () => {
+  const html = `<p>Start</p><!----><p>End</p>`;
+
+  expect(format(html)).toEqual(
+    `
+<p>
+  Start
+</p>
+<p>
+  End
+</p>
+`
+  );
+});
+
+test('should not strip out conditional comments', () => {
+  const html = `<p>Start</p><!--[if IE 9]>.... some HTML here ....<![endif]--><p>End</p>`;
+
+  expect(format(html)).toEqual(
+    `
+<p>
+  Start
+</p>
+<!--[if IE 9]>.... some HTML here ....<![endif]-->
+<p>
+  End
+</p>
+`
+  );
 });
