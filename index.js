@@ -227,6 +227,10 @@ const format = function(html) {
         append(`</${tagname}>`);
       },
       oncomment: function(data) {
+        // Only display conditional comments.
+        if (!data.startsWith('[')) {
+          return;
+        }
         appendLineBreak();
         appendCurrentIndentation();
         append('<!--');
