@@ -151,6 +151,12 @@ const format = function(html) {
     return voidElements.indexOf(name) !== -1;
   };
 
+  // https://www.w3.org/TR/html52/infrastructure.html#space-characters
+  // defines "space characters" to include SPACE, TAB, LF, FF, and CR.
+  const trimText = text => {
+    return text.replace(/^[ \t\n\f\r]+|[ \t\n\f\r]+$/g, '');
+  }
+
   const extractAttributesFromString = content => {
     const attributes = {};
 
@@ -205,7 +211,7 @@ const format = function(html) {
         appendClosingTag(attributes, '>');
       },
       ontext: function(text) {
-        const trimmed = text.trim();
+        const trimmed = trimText(text);
         if (trimmed.length === 0) {
           return;
         }
