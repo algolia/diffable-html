@@ -1,3 +1,13 @@
+<a name="4.0.0"></a>
+# [4.0.0](https://github.com/rayrutjes/diffable-html/compare/v3.0.0...v4.0.0) (2018-12-31)
+
+
+### Bug Fixes
+
+* trim space characters but not Unicode whitespace ([bade75d](https://github.com/rayrutjes/diffable-html/commit/bade75d)), closes [#14](https://github.com/rayrutjes/diffable-html/issues/14)
+
+
+
 <a name="3.0.0"></a>
 # [3.0.0](https://github.com/rayrutjes/diffable-html/compare/v2.1.0...v3.0.0) (2018-01-03)
 
