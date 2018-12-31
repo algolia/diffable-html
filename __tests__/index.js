@@ -68,6 +68,18 @@ test('should trim text nodes', () => {
   );
 });
 
+test('should not trim Unicode whitespace', () => {
+  const html = `<span> \u2009 surrounded  \u2005\u200a  </span>`;
+
+  expect(format(html)).toEqual(
+    `
+<span>
+  \u2009 surrounded  \u2005\u200a
+</span>
+`
+  );
+});
+
 test('should not introduce line break if text node is empty', () => {
   const html = `<span>     </span>`;
 
