@@ -3,6 +3,7 @@
   "version": "4.0.0",
   "description": "Opinionated HTML formatter focused towards making HTML diffs readable.",
   "main": "dist/diffable-html.js",
+  "types": "types.d.ts",
   "author": "Raymond RUTJES <raymond.rutjes@gmail.com> (https://github.com/rayrutjes/)",
   "license": "MIT",
   "scripts": {
@@ -13,7 +14,8 @@
     "changelog:unreleased": "conventional-changelog --preset angular --output-unreleased"
   },
   "files": [
-    "dist"
+    "dist",
+    "types.d.ts"
   ],
   "repository": {
     "type": "git",
