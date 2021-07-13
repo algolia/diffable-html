@@ -20,7 +20,7 @@ const voidElements = [
   'wbr',
 ];
 
-const format = function(html, { sortAttributes } = {}) {
+const format = function(html, { sortAttributes = names => names } = {}) {
   const elements = [];
   const indentSize = 2;
 
@@ -109,10 +109,7 @@ const format = function(html, { sortAttributes } = {}) {
   };
 
   const appendAttributes = (attributes, tagName) => {
-    let names = Object.keys(attributes);
-    if (typeof sortAttributes === 'function') {
-      names = sortAttributes(names);
-    }
+    const names = sortAttributes(Object.keys(attributes));
 
     if (names.length === 1) {
       appendAttribute(names[0], attributes[names[0]]);
