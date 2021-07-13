@@ -263,3 +263,16 @@ test('should not strip out conditional comments', () => {
 `
   );
 });
+
+test('should sort attributes with `sortAttributes` function', () => {
+  const html = `<input name="test" value="true" class="form-control">`;
+  const sortAttributes = (names) => names.sort();
+  expect(format(html, { sortAttributes })).toEqual(
+    `
+<input class="form-control"
+       name="test"
+       value="true"
+>
+`
+  );
+});

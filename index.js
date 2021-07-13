@@ -20,7 +20,7 @@ const voidElements = [
   'wbr',
 ];
 
-const format = function(html) {
+const format = function(html, { sortAttributes = names => names } = {}) {
   const elements = [];
   const indentSize = 2;
 
@@ -109,7 +109,7 @@ const format = function(html) {
   };
 
   const appendAttributes = (attributes, tagName) => {
-    const names = Object.keys(attributes);
+    const names = sortAttributes(Object.keys(attributes));
 
     if (names.length === 1) {
       appendAttribute(names[0], attributes[names[0]]);
@@ -120,7 +120,7 @@ const format = function(html) {
     }
 
     let firstAttribute = true;
-    for (let name in attributes) {
+    for (let name of names) {
       if (firstAttribute === true) {
         firstAttribute = false;
         appendAttribute(name, attributes[name]);
