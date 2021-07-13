@@ -1,3 +1,13 @@
+<a name="4.1.0"></a>
+# [4.1.0](https://github.com/rayrutjes/diffable-html/compare/v4.0.0...v4.1.0) (2021-07-13)
+
+
+### Features
+
+* add sortAttributes option ([#40](https://github.com/rayrutjes/diffable-html/issues/40)) ([4b66987](https://github.com/rayrutjes/diffable-html/commit/4b66987))
+
+
+
 <a name="4.0.0"></a>
 # [4.0.0](https://github.com/rayrutjes/diffable-html/compare/v3.0.0...v4.0.0) (2018-12-31)
 
