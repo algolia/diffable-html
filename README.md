@@ -53,8 +53,9 @@ Will output:
   <h1>
     Hello World!
   </h1>
-  <ul id="main-list"
-      class="list"
+  <ul
+    id="main-list"
+    class="list"
   >
     <li>
       <a href="#">
