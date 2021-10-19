@@ -47,11 +47,7 @@ const format = function(html, { sortAttributes = names => names } = {}) {
   };
 
   const getAttributeIndentation = tagName => {
-    return getIndentation(indentSize * currentDepth + tagName.length - 1);
-  };
-
-  const getAttributeIndentationForCurrentTag = () => {
-    return getAttributeIndentation(currentTag);
+    return getIndentation(indentSize * currentDepth - 1);
   };
 
   const append = content => {
@@ -119,14 +115,8 @@ const format = function(html, { sortAttributes = names => names } = {}) {
       return;
     }
 
-    let firstAttribute = true;
     for (let name of names) {
-      if (firstAttribute === true) {
-        firstAttribute = false;
-        appendAttribute(name, attributes[name]);
-      } else {
-        appendAttributeOnNewLine(name, attributes[name], tagName);
-      }
+      appendAttributeOnNewLine(name, attributes[name], tagName);
     }
   };
 
