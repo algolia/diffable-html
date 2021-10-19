@@ -26,9 +26,10 @@ test('should align attributes vertically', () => {
 
   expect(format(html)).toEqual(
     `
-<input name="test"
-       value="true"
-       class="form-control"
+<input
+  name="test"
+  value="true"
+  class="form-control"
 >
 `
   );
@@ -106,8 +107,9 @@ test('should support xml', () => {
   const xml = `<?xml version="1.0" encoding="utf-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://www.example.com</loc></url><url><loc>https://www.example.com/test</loc></url></urlset>`;
 
   expect(format(xml)).toEqual(`
-<?xml version="1.0"
-      encoding="utf-8"
+<?xml
+  version="1.0"
+  encoding="utf-8"
 ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -176,13 +178,15 @@ test('should support html directives', () => {
 
   expect(format(html)).toEqual(`
 <!doctype html>
-<html class="no-js"
-      lang
+<html
+  class="no-js"
+  lang
 >
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible"
-          content="ie=edge"
+    <meta
+      http-equiv="x-ua-compatible"
+      content="ie=edge"
     >
     <title>
       test
@@ -195,9 +199,10 @@ test('should support html directives', () => {
     <p>
       Hello world! This is HTML5 Boilerplate.
     </p>
-    <script src="https://code.jquery.com/jquery-{{JQUERY_VERSION}}.min.js"
-            integrity="{{JQUERY_SRI_HASH}}"
-            crossorigin="anonymous"
+    <script
+      src="https://code.jquery.com/jquery-{{JQUERY_VERSION}}.min.js"
+      integrity="{{JQUERY_SRI_HASH}}"
+      crossorigin="anonymous"
     >
     </script>
     <script src="js/plugins.js">
@@ -208,9 +213,10 @@ test('should support html directives', () => {
       window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
       ga('create','UA-XXXXX-Y','auto');ga('send','pageview')
     </script>
-    <script src="https://www.google-analytics.com/analytics.js"
-            async
-            defer
+    <script
+      src="https://www.google-analytics.com/analytics.js"
+      async
+      defer
     >
     </script>
   </body>
@@ -269,9 +275,10 @@ test('should sort attributes with `sortAttributes` function', () => {
   const sortAttributes = (names) => names.sort();
   expect(format(html, { sortAttributes })).toEqual(
     `
-<input class="form-control"
-       name="test"
-       value="true"
+<input
+  class="form-control"
+  name="test"
+  value="true"
 >
 `
   );
