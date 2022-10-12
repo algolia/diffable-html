@@ -80,14 +80,6 @@ const format = function(html, { sortAttributes = names => names } = {}) {
     append(closeWith);
   };
 
-  const getAttributeAsString = (name, value) => {
-    if (value.length === 0) {
-      return name;
-    }
-
-    return `${name}="${value}"`;
-  };
-
   const appendAttribute = (name, value) => {
     let attribute = ' ' + name;
 
