@@ -40,7 +40,7 @@
   },
   "homepage": "https://github.com/rayrutjes/diffable-html#readme",
   "dependencies": {
-    "htmlparser2": "5.0.0"
+    "htmlparser2": "5.0.1"
   },
   "devDependencies": {
     "babel-jest": "^19.0.0",
