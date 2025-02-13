@@ -229,6 +229,7 @@ const format = function(html, { sortAttributes = names => names } = {}) {
     {
       lowerCaseTags: false,
       recognizeSelfClosing: true,
+      decodeEntities: false,
     }
   );
   parser.write(html);
