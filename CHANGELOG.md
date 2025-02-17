@@ -1,3 +1,13 @@
+<a name="6.0.1"></a>
+## [6.0.1](https://github.com/rayrutjes/diffable-html/compare/v4.1.0...v6.0.1) (2025-02-17)
+
+
+### Features
+
+* update attribute formatting ([#45](https://github.com/rayrutjes/diffable-html/issues/45)) ([69120ea](https://github.com/rayrutjes/diffable-html/commit/69120ea))
+
+
+
 <a name="6.0.0"></a>
 
 # [6.0.0](https://github.com/rayrutjes/diffable-html/compare/v4.1.0...v6.0.0) (2025-02-13)
