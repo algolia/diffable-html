@@ -1,5 +1,5 @@
 <a name="6.0.1"></a>
-## [6.0.1](https://github.com/rayrutjes/diffable-html/compare/v4.1.0...v6.0.1) (2025-02-17)
+## [6.0.1](https://github.com/rayrutjes/diffable-html/compare/v6.0.0...v6.0.1) (2025-02-17)
 
 
 ### Features
@@ -10,7 +10,7 @@
 
 <a name="6.0.0"></a>
 
-# [6.0.0](https://github.com/rayrutjes/diffable-html/compare/v4.1.0...v6.0.0) (2025-02-13)
+# [6.0.0](https://github.com/rayrutjes/diffable-html/compare/v5.0.0...v6.0.0) (2025-02-13)
 
 ### Features
 
